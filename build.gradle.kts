@@ -1,7 +1,9 @@
 plugins {
 	java
+	application
 	id("org.springframework.boot") version "3.2.1-SNAPSHOT"
 	id("io.spring.dependency-management") version "1.1.4"
+	id("checkstyle")
 }
 
 group = "hexlet.code"
@@ -36,4 +38,16 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.withType<Checkstyle>().configureEach {
+	reports {
+		xml.required = false
+		html.required = true
+		html.stylesheet = resources.text.fromFile("config/checkstyle/checkstyle.xml")
+	}
+}
+
+application {
+	mainClass = "hexlet.code.AppApplication"
 }
