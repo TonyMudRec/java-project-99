@@ -4,7 +4,7 @@ plugins {
 	id("org.springframework.boot") version "3.2.1-SNAPSHOT"
 	id("io.spring.dependency-management") version "1.1.4"
 	checkstyle
-	id("jacoco")
+	jacoco
 }
 
 group = "hexlet.code"
@@ -50,9 +50,7 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-tasks.jacocoTestReport {
-	dependsOn(tasks.test) // tests are required to run before generating the report
-}
+tasks.jacocoTestReport { reports { xml.required.set(true) } }
 
 application {
 	mainClass = "hexlet.code.AppApplication"

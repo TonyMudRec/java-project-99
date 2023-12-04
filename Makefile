@@ -5,7 +5,7 @@ test:
 	./gradlew test
 	
 report:
-	./gradlew test jacocoTestReport
+	./gradlew jacocoTestReport
 	
 run:
 	./gradlew run
