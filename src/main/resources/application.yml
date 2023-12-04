@@ -18,6 +18,16 @@ spring:
   output:
     ansi:
       enabled: always
+  datasource:
+  default: ${APP_ENV}
+  development:
+    username: ""
+    password: ""
+    url: "jdbc:h2:./database"
+  production:
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
 
 rsa:
   private-key: classpath:certs/private.pem
@@ -25,3 +35,4 @@ rsa:
 
 server:
   address: 0.0.0.0
+

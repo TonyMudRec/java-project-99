@@ -4,6 +4,7 @@ plugins {
 	id("org.springframework.boot") version "3.2.1-SNAPSHOT"
 	id("io.spring.dependency-management") version "1.1.4"
 	id("checkstyle")
+	id("jacoco")
 }
 
 group = "hexlet.code"
@@ -46,6 +47,10 @@ tasks.withType<Checkstyle>().configureEach {
 		html.required = true
 		html.stylesheet = resources.text.fromFile("config/checkstyle/checkstyle.xml")
 	}
+}
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test) // tests are required to run before generating the report
 }
 
 application {
