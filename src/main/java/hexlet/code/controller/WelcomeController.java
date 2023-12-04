@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WelcomeController {
 
     /**
-     * welcome page handler
+     * welcome page handler.
      * @return greeting
      */
     @GetMapping(path = "/welcome")
