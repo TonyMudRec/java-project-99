@@ -12,12 +12,7 @@ spring:
     bean:
       validation:
         enabled: true
-  jpa:
-    generate-ddl: true
-    show-sql: true
-  output:
-    ansi:
-      enabled: always
+
   datasource:
   default: ${APP_ENV}
   development:
@@ -28,6 +23,14 @@ spring:
     username: ${PGUSER}
     password: ${PGPASSWORD}
     url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  output:
+    ansi:
+      enabled: always
 
 rsa:
   private-key: classpath:certs/private.pem
