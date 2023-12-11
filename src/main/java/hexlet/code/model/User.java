@@ -43,8 +43,8 @@ public class User implements UserDetails, BaseEntity {
       lastName - фамилия пользователя, необязательное
       email - адрес электронной почты, обязательное. Только формата email
       password - пароль, обязательное. Минимум 3 символа
-      createdAt - дата создания (регистрации) пользователя, заполняется автоматически. Дата создания (регистрации) пользователя
-      updatedAt – дата обновления данных пользователя, заполняется автоматически. Дата обновления данных пользователя
+      createdAt - дата создания (регистрации) пользователя, заполняется автоматически.
+      updatedAt – дата обновления данных пользователя, заполняется автоматически.
      */
 
     @Id
@@ -75,7 +75,9 @@ public class User implements UserDetails, BaseEntity {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    public User(String email, String password) {
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
     }

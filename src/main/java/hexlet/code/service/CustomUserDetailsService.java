@@ -9,7 +9,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 public class CustomUserDetailsService implements UserDetailsManager {
 
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
 
     @Override
     public void createUser(UserDetails user) {

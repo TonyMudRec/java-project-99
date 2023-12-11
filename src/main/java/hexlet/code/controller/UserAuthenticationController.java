@@ -7,11 +7,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
 public class UserAuthenticationController {
 
     @Autowired
@@ -27,7 +25,6 @@ public class UserAuthenticationController {
 
         authenticationManager.authenticate(authentication);
 
-        var token = jwtUtils.generateToken(authRequest.getEmail());
-        return token;
+        return jwtUtils.generateToken(authRequest.getEmail());
     }
 }

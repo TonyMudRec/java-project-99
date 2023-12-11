@@ -37,7 +37,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Разрешаем доступ только к /api/login чтобы аутентифцироваться и получить токен
+                        // Allow access only to /api/login to authenticate and get the token
                         .requestMatchers("/api/login").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
