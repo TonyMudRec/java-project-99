@@ -10,10 +10,11 @@ public class UserCreateDTO {
 
     @NotBlank
     private String email;
-    @NotBlank
+
     private String firstName;
-    @NotBlank
+
     private String lastName;
+
     @NotBlank
     private String decodedPassword;
 }
