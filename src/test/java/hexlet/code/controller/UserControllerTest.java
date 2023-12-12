@@ -3,10 +3,9 @@ package hexlet.code.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.UserCreateDTO;
 import hexlet.code.dto.UserUpdateDTO;
-import hexlet.code.mapper.UserMapper;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -29,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserControllerTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserControllerTest.class + "----------- ");
+    private static final Logger LOG = LoggerFactory.getLogger(UserControllerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,41 +37,33 @@ class UserControllerTest {
     private ObjectMapper mapper;
 
     @Autowired
-    private static UserRepository userRepository;
-
-    @Autowired
-    private UserMapper userMapper;
+    private UserRepository userRepository;
 
     private static User testUser;
 
-    @BeforeEach
-    public void setUp() {
-        var user = new User("name_test",
+    @BeforeAll
+    public static void beforeAll() {
+        testUser = new User("name_test",
                 "last_name_test",
                 "example_user@gmail.com",
                 "1234");
-        userRepository.save(user);
-
-        LOG.info("test user with first name " + user.getFirstName() + "  created");
-
-        testUser = userRepository.getReferenceById(1L);
+        LOG.debug("test user with first name " + testUser.getFirstName() + " created");
     }
 
-    @AfterEach
-    public void afterEach() {
-        userRepository.delete(testUser);
-
-        LOG.info("test user removed");
+    @BeforeEach
+    public void beforeEach() {
+        userRepository.save(testUser);
+        LOG.debug("test user with first name " + testUser.getFirstName() + " saved");
     }
+
     @Test
     void indexTest() throws Exception {
-        var request = get("/api/users");
-        var result = mockMvc.perform(request)
+        var requestGet = get("/api/users");
+        var result = mockMvc.perform(requestGet)
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
 
-        System.out.println(body);
         assertThat(body).asList().hasSize(1);
     }
 
