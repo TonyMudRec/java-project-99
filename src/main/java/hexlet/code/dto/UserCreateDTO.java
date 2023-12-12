@@ -18,10 +18,10 @@ public class UserCreateDTO {
     private String lastName;
 
     @NotBlank
-    private String decodedPassword;
+    private String password;
 
-    public UserCreateDTO(String email, String decodedPassword) {
+    public UserCreateDTO(String email, String password) {
         this.email = email;
-        this.decodedPassword = decodedPassword;
+        this.password = password;
     }
 }

@@ -16,5 +16,5 @@ public class UserUpdateDTO {
     @NotBlank
     private JsonNullable<String> lastName;
     @NotBlank
-    private JsonNullable<String> decodedPassword;
+    private JsonNullable<String> password;
 }
