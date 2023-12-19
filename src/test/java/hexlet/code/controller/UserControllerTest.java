@@ -7,7 +7,6 @@ import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -138,7 +137,7 @@ class UserControllerTest {
     @Test
     void destroyTest() throws Exception {
         userRepository.save(testUser);
-        
+
         var request = delete("/api/users/{id}", testUser.getId());
         mockMvc.perform(request)
                 .andExpect(status().isOk());

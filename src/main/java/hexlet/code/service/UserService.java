@@ -28,7 +28,7 @@ public class UserService {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
 
-        LOG.debug("user with id "+ user.getId() +" was found");
+        LOG.debug("user with id " + user.getId() + " was found");
 
         return userMapper.map(user);
     }
