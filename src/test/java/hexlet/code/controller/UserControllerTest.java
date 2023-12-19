@@ -5,6 +5,8 @@ import hexlet.code.dto.UserCreateDTO;
 import hexlet.code.dto.UserUpdateDTO;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.util.ModelGenerator;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,25 +41,22 @@ class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ModelGenerator modelGenerator;
+
     private static User testUser;
 
-    @BeforeAll
-    public static void beforeAll() {
-        testUser = new User("name_test",
-                "last_name_test",
-                "example_user@gmail.com",
-                "1234");
-        LOG.debug("test user with first name " + testUser.getFirstName() + " created");
-    }
-
     @BeforeEach
-    public void beforeEach() {
-        userRepository.save(testUser);
-        LOG.debug("test user with first name " + testUser.getFirstName() + " saved");
+    public void setUp() {
+        testUser = Instancio.of(modelGenerator.getUserModel()).create();
+
+        LOG.debug("test user with first name " + testUser.getFirstName() + " created");
     }
 
     @Test
     void indexTest() throws Exception {
+        userRepository.save(testUser);
+
         var requestGet = get("/api/users");
         var result = mockMvc.perform(requestGet)
                 .andExpect(status().isOk())
@@ -69,6 +68,8 @@ class UserControllerTest {
 
     @Test
     void showTest() throws Exception {
+        userRepository.save(testUser);
+
         var request = get("/api/users/{id}", testUser.getId());
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
@@ -80,6 +81,8 @@ class UserControllerTest {
 
     @Test
     void createTest() throws Exception {
+        userRepository.save(testUser);
+
         var email = "example_user2@gmail.com";
         var dto = new UserCreateDTO(email,
                 "name2_test",
@@ -112,6 +115,8 @@ class UserControllerTest {
 
     @Test
     void updateTest() throws Exception {
+        userRepository.save(testUser);
+
         var dto = new UserUpdateDTO();
         var newName = "updated_name2_test";
         dto.setEmail(JsonNullable.of(testUser.getEmail()));
@@ -132,6 +137,8 @@ class UserControllerTest {
 
     @Test
     void destroyTest() throws Exception {
+        userRepository.save(testUser);
+        
         var request = delete("/api/users/{id}", testUser.getId());
         mockMvc.perform(request)
                 .andExpect(status().isOk());

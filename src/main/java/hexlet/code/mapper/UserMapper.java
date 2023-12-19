@@ -1,5 +1,6 @@
 package hexlet.code.mapper;
 
+import hexlet.code.config.PasswordHasher;
 import hexlet.code.dto.UserCreateDTO;
 import hexlet.code.dto.UserDTO;
 import hexlet.code.dto.UserUpdateDTO;
@@ -10,8 +11,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.BeforeMapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Arrays;
 
 /**
  * mapper needs to convert forms of user representations.
@@ -23,9 +24,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class UserMapper {
-
-    @Autowired
-    private BCryptPasswordEncoder encoder;
 
     /**
      * convert create dto representation to user object.
@@ -54,6 +52,6 @@ public abstract class UserMapper {
     @BeforeMapping
     public void encryptPassword(UserCreateDTO data) {
         var password = data.getPassword();
-        data.setPassword(encoder.encode(password));
+        data.setPassword(Arrays.toString(PasswordHasher.getHash(password)));
     }
 }

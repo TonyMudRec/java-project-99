@@ -1,46 +1,16 @@
----
-logging:
-  level:
-    root: INFO
-    org:
-      springframework:
-        # web: DEBUG
-        security: DEBUG
-
 spring:
-#  instancio:
-#    bean:
-#      validation:
-#        enabled: true
-
-  datasource:
-  default: ${APP_ENV}
-#  development:
-#    username: admin
-#    password: testdb
-#    url: jdbc:postgresql://localhost:5432/testdb?user=admin&password=testdb
-  development:
-    username: sa
-    password: password
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-  production:
-    username: ${PGUSER}
-    password: ${PGPASSWORD}
-    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
-
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
   output:
     ansi:
       enabled: always
-
-rsa:
-  private-key: classpath:certs/private.pem
-  public-key: classpath:certs/public.pem
-
-server:
-  address: 0.0.0.0
-
+  datasource:
+    url: jdbc:h2:file:./my.db
+    username: sa
+    password: pass
+  #  development:
+  #    username: admin
+  #    password: testdb
+  #    url: jdbc:postgresql://localhost:5432/testdb?user=admin&password=testdb

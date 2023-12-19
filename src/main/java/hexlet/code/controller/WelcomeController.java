@@ -10,7 +10,7 @@ public class WelcomeController {
      * welcome page handler.
      * @return greeting
      */
-    @GetMapping(path = "/welcome")
+    @GetMapping(path = "/")
     public String welcome() {
         return "Welcome to Spring!";
     }
