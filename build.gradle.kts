@@ -52,6 +52,12 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
+tasks.jacocoTestReport {
+	reports {
+		xml.required.set(true)
+	}
+}
+
 tasks.bootBuildImage {
 	builder.set("paketobuildpacks/builder-jammy-base:latest")
 }
