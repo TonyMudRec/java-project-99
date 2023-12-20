@@ -1,18 +1,18 @@
 package hexlet.code.app.mapper;
 
-//import hexlet.code.app.config.PasswordHasher;
 import hexlet.code.app.dto.UserCreateDTO;
 import hexlet.code.app.dto.UserDTO;
 import hexlet.code.app.dto.UserUpdateDTO;
 import hexlet.code.app.model.User;
+import hexlet.code.app.util.PasswordHasher;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.MappingTarget;
-//import org.mapstruct.BeforeMapping;
-//
-//import java.util.Arrays;
+import org.mapstruct.BeforeMapping;
+
+import java.util.Arrays;
 
 /**
  * mapper needs to convert forms of user representations.
@@ -49,9 +49,9 @@ public abstract class UserMapper {
      */
     public abstract void update(UserUpdateDTO dto, @MappingTarget User model);
 
-//    @BeforeMapping
-//    public void encryptPassword(UserCreateDTO data) {
-//        var password = data.getPassword();
-//        data.setPassword(Arrays.toString(PasswordHasher.getHash(password)));
-//    }
+    @BeforeMapping
+    public void encryptPassword(UserCreateDTO data) {
+        var password = data.getPassword();
+        data.setPassword(Arrays.toString(PasswordHasher.getHash(password)));
+    }
 }

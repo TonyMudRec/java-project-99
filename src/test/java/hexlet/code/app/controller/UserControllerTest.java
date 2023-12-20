@@ -5,8 +5,7 @@ import hexlet.code.app.dto.UserCreateDTO;
 import hexlet.code.app.dto.UserUpdateDTO;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
-import hexlet.code.app.util.ModelGenerator;
-import org.instancio.Instancio;
+import hexlet.code.app.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -17,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -40,14 +41,15 @@ class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ModelGenerator modelGenerator;
-
     private static User testUser;
 
     @BeforeEach
     public void setUp() {
-        testUser = Instancio.of(modelGenerator.getUserModel()).create();
+        testUser = new User();
+        testUser.setFirstName("hexlet");
+        testUser.setLastName("example");
+        testUser.setEmail("hexlet@example.com");
+        testUser.setPassword(Arrays.toString(PasswordHasher.getHash("qwerty")));
 
         LOG.debug("test user with first name " + testUser.getFirstName() + " created");
     }
