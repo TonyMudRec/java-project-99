@@ -33,6 +33,7 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
 	implementation("org.instancio:instancio-junit:3.3.1")
 	implementation("net.datafaker:datafaker:2.0.2")
+	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation(platform("org.junit:junit-bom:5.10.0"))
