@@ -2,12 +2,14 @@ package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.dto.UserCreateDTO;
+import hexlet.code.app.dto.UserUpdateDTO;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -87,29 +88,29 @@ class UserControllerTest {
 
     @Test
     void createTest() throws Exception {
-        userRepository.save(testUser);
+        var dto = new UserCreateDTO();
+        dto.setEmail(testUser.getEmail());
+        dto.setFirstName(testUser.getFirstName());
+        dto.setLastName(testUser.getLastName());
+        dto.setPassword(testUser.getPassword());
 
-        var email = "example_user2@gmail.com";
-        var dto = new UserCreateDTO(email,
-                "name2_test",
-                "last_name2_test",
-                testUser.getPassword());
         var request = post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto));
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
-        var user = userRepository.findByEmail(email).get();
+        var user = userRepository.findByEmail(testUser.getEmail()).get();
 
         assertThat(user).isNotNull();
     }
 
     @Test
     void createWithNotValidEmailTest() throws Exception {
-        var dto = new UserCreateDTO("email",
-                "name2_test",
-                "last_name2_test",
-                testUser.getPassword());
+        var dto = new UserCreateDTO();
+        dto.setEmail("email");
+        dto.setFirstName(testUser.getFirstName());
+        dto.setLastName(testUser.getLastName());
+        dto.setPassword(testUser.getPassword());
 
         var request = post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -120,13 +121,16 @@ class UserControllerTest {
     }
 
     @Test
-    void updateTest() throws Exception {
+    void partialUpdateTest() throws Exception {
         userRepository.save(testUser);
 
-        var dto = new HashMap<String, String>();
         var newName = "updated_name2_test";
-        dto.put("firstName", newName);
-        dto.put("lastName", null);
+        String newLastName = null;
+
+        var dto = new UserUpdateDTO();
+        dto.setFirstName(JsonNullable.of(newName));
+        dto.setPassword(JsonNullable.undefined());
+        dto.setLastName(JsonNullable.of(newLastName));
 
         var request = put("/api/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -138,7 +142,7 @@ class UserControllerTest {
 
         assertThat(foundUser.getFirstName()).isEqualTo(newName);
         assertThat(foundUser.getLastName()).isNull();
-        assertThat(foundUser.getEmail()).isNotNull();
+        assertThat(foundUser.getPassword()).isNotNull();
     }
 
     @Test
