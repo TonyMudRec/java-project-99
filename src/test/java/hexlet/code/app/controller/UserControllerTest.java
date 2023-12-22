@@ -6,7 +6,6 @@ import hexlet.code.app.dto.UserUpdateDTO;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
-import hexlet.code.app.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -43,6 +43,9 @@ class UserControllerTest {
     private UserMapper userMapper;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
     private static User testUser;
@@ -53,11 +56,18 @@ class UserControllerTest {
         testUser.setFirstName("hexlet");
         testUser.setLastName("example");
         testUser.setEmail("hexlet@example.com");
-        testUser.setPassword(Arrays.toString(PasswordHasher.getHash("qwerty")));
+        testUser.setPassword(passwordEncoder.encode("qwerty"));
 
         LOG.debug("test user with first name " + testUser.getFirstName() + " created");
 
         userRepository.deleteAll();
+    }
+
+    @Test
+    void checkPassword() {
+        var encodedPass = passwordEncoder.encode("qwerty");
+
+        assertThat(testUser.getPassword()).isEqualTo(encodedPass);
     }
 
     @Test
@@ -102,6 +112,7 @@ class UserControllerTest {
         var user = userRepository.findByEmail(testUser.getEmail()).get();
 
         assertThat(user).isNotNull();
+        assertThat(user.getPassword()).isNotEqualTo(testUser.getPassword());
     }
 
     @Test
