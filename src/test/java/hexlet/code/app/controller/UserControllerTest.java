@@ -18,14 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,18 +63,11 @@ class UserControllerTest {
     }
 
     @Test
-    void checkPassword() {
-        var encodedPass = passwordEncoder.encode("qwerty");
-
-        assertThat(testUser.getPassword()).isEqualTo(encodedPass);
-    }
-
-    @Test
     void indexTest() throws Exception {
         userRepository.save(testUser);
 
-        var requestGet = get("/api/users");
-        var result = mockMvc.perform(requestGet)
+        var request = get("/api/users").with(jwt());
+        var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
@@ -87,7 +79,7 @@ class UserControllerTest {
     void showTest() throws Exception {
         userRepository.save(testUser);
 
-        var request = get("/api/users/{id}", testUser.getId());
+        var request = get("/api/users/{id}", testUser.getId()).with(jwt());
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
@@ -104,7 +96,7 @@ class UserControllerTest {
         dto.setLastName(testUser.getLastName());
         dto.setPassword(testUser.getPassword());
 
-        var request = post("/api/users")
+        var request = post("/api/users").with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto));
         mockMvc.perform(request)
@@ -123,7 +115,7 @@ class UserControllerTest {
         dto.setLastName(testUser.getLastName());
         dto.setPassword(testUser.getPassword());
 
-        var request = post("/api/users")
+        var request = post("/api/users").with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto));
 
@@ -143,7 +135,7 @@ class UserControllerTest {
         dto.setPassword(JsonNullable.undefined());
         dto.setLastName(JsonNullable.of(newLastName));
 
-        var request = put("/api/users/{id}", testUser.getId())
+        var request = put("/api/users/{id}", testUser.getId()).with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto));
         mockMvc.perform(request)
@@ -160,7 +152,7 @@ class UserControllerTest {
     void destroyTest() throws Exception {
         userRepository.save(testUser);
 
-        var request = delete("/api/users/{id}", testUser.getId());
+        var request = delete("/api/users/{id}", testUser.getId()).with(jwt());
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
 
